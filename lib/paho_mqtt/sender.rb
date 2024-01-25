@@ -34,6 +34,7 @@ module PahoMqtt
     def send_packet(packet)
       begin
         unless @socket.nil? || @socket.closed?
+          PahoMqtt.logger.warn("[SEND] #{packet.topic} => #{packet.payload} (qos: #{packet.qos}, retain: #{packet.retain})") if PahoMqtt.logger? && packet.type_name == 'PUBLISH'
           @socket.write(packet.to_s)
           @last_packet_sent_at = Time.now
           MQTT_ERR_SUCCESS

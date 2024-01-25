@@ -59,6 +59,7 @@ module PahoMqtt
       if waiting_queue.length >= max_packet
         raise FullQueueException
       end
+      PahoMqtt.logger.warn("[PUSH] #{packet.topic} => #{packet.payload} (qos: #{packet.qos}, retain: #{packet.retain})") if PahoMqtt.logger? && packet.type_name == 'PUBLISH'
       queue_mutex.synchronize do
         waiting_queue.push(:id => new_id, :packet => packet, :timestamp => Time.now)
       end
